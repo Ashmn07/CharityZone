@@ -10,7 +10,7 @@ function Register() {
   const [uName,setName] = useState('')
   const [password,setPassword] = useState('')
 
-  const {connect,account,createUser} = useCharity()
+  const {connect,account,createUser,getUser} = useCharity()
 
   const userOptions = [
     { label: 'Beneficiary', value: 'beneficiary',key:1 },
@@ -26,6 +26,12 @@ function Register() {
   const handleConnect = (e) => {
     e.preventDefault();
     connect()
+  }
+
+  const getUserHandler = async(e) => {
+    e.preventDefault();
+    const user = await getUser()
+    console.log(user)
   }
 
   return (
