@@ -1,7 +1,8 @@
 import React,{useState} from 'react'
+import { Link } from 'react-router-dom'
 import RegisterImg from '../assets/Register.PNG'
 import useCharity from '../contract/useCharity'
-import Navbar from './Navbar'
+import Logo from '../assets/logo.png'
 
 function Register() {
 
@@ -36,7 +37,14 @@ function Register() {
 
   return (
       <div className="bg-black h-screen w-screen">
-        <Navbar/>
+        <nav className="border-gray-200 px-10 py-2.5 fixed w-full">
+            <div className="container flex flex-wrap items-center mx-auto px-6 py-2">
+                <div className="flex items-center">
+                    <img src={Logo} className="mr-3 h-6 sm:h-9" alt="Charity Zone Logo" />
+                    <Link to="/" className="self-center text-4xl font-bold whitespace-nowrap text-white hover:text-gray-300 cursor-pointer">Charity Zone</Link>
+                </div>
+            </div>
+        </nav>
         <div className="flex justify-center items-center h-full w-full">
           <div className="flex-1 px-16">
           <img src={RegisterImg} className="" alt="Charity Logo" />
