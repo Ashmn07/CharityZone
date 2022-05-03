@@ -3,7 +3,7 @@ import {ethers} from 'ethers'
 import { useEffect, useState } from 'react'
 
 const ContractABI = Charity.abi
-const ContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+const ContractAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
 const Ethereum = typeof window !== 'undefined' && window.ethereum
 
 const getCharityContract = () => {
@@ -51,12 +51,24 @@ const useCharity = () => {
         setCurrentUser({wallet,name,username,usertype})
         return user
     }
-    const createUser = async (username,uName,userType,password) => {
+
+    const getProj = async() => {
         const contract = getCharityContract();
-        
-        const user = await contract.register(username,uName,userType,password)
+        const proj = await contract.getProj()
+        return proj
     }
-    return {connect,account:currentAccount,user:currentUser,createUser,getUser}
+
+    const createUser = async (username,uName,userType) => {
+        const contract = getCharityContract();
+        const user = await contract.register(username,uName,userType)
+    }
+
+    const createProject = async (title,description) => {
+        const contract = getCharityContract();
+        const project = await contract.createProject(description,title)
+    }
+
+    return {connect,account:currentAccount,user:currentUser,createUser,getUser,createProject,getProj}
     // const CharityContract = getCharity()
 }
 

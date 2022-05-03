@@ -11,7 +11,7 @@ function Validator() {
           <div className="container flex flex-wrap justify-between items-center mx-auto px-6 py-2">
               <div className="flex items-center">
                   <img src={Logo} className="mr-3 h-6 sm:h-9" alt="Charity Zone Logo" />
-                  <Link to="/" className="self-center text-4xl font-bold whitespace-nowrap text-white hover:text-gray-300 cursor-pointer">Charity Zone</Link>
+                  <Link to="/validator" className="self-center text-4xl font-bold whitespace-nowrap text-white hover:text-gray-300 cursor-pointer">Charity Zone</Link>
               </div>
               <div className="text-white">
                 Welcome {location.state.name}

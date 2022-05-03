@@ -9,7 +9,6 @@ function Register() {
   const [userType,setUserType] = useState('beneficiary')
   const [userName,setUserName] = useState('')
   const [uName,setName] = useState('')
-  const [password,setPassword] = useState('')
 
   const {connect,account,createUser,getUser} = useCharity()
 
@@ -21,7 +20,7 @@ function Register() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    createUser(userName,uName,userType,password)
+    createUser(userName,uName,userType)
   }
 
   const handleConnect = (e) => {
@@ -58,10 +57,6 @@ function Register() {
                 <div className="flex flex-col space-y-2 w-full my-2">
                   <label className="text-white text-lg font-semibold">Name : </label>
                   <input name="Email" type="email" value={uName} onChange={(e)=>setName(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Name"/>
-                </div>
-                <div className="flex flex-col space-y-2 w-full my-2">
-                  <label className="text-white text-lg font-semibold">Password : </label>
-                  <input name="password" type="password" value={password} onChange={(e)=>setPassword(e.target.value)}required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Password"/>
                 </div>
                 <div className="flex flex-col space-y-2 w-full my-2">
                   <label className="text-white text-lg font-semibold">User Type :</label>
