@@ -45,7 +45,7 @@ contract Charity{
         projects.push(temp);
     }
 
-    function getProj() public view returns (Project memory){
-        return projects[0];
+    function getProjects() public view returns (Project[] memory){
+        return projects;
     }
 }

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const bannerStyle = {
     backgroundImage: `linear-gradient(0deg, rgba(20,20,20,1) 4%, rgba(20,20,20,0.7) 100%),url("https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80")`,
     backgroundSize: "cover",
@@ -19,7 +21,7 @@ function Banner() {
             decisions, on the other hand it provides the donors with a say in where the money is donated to.
           </p>
           <button className="mt-10 bg-gray-800 rounded-md bg-opacity-60 hover:bg-opacity-90 px-4 py-2 w-max">
-            <p className="text-white hover:text-gray-300 text-2xl font-semibold">View Charity Projects</p>
+            <Link to="/viewprojects" className="text-white hover:text-gray-300 text-2xl font-semibold">View Charity Projects</Link>
           </button>
         </div>
     </div>

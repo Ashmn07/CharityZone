@@ -8,6 +8,7 @@ import Beneficiary from './Components/Beneficiary';
 import Donor from './Components/Donor';
 import Validator from './Components/Validator';
 import CreateProject from './Components/CreateProject';
+import ViewProjects from './Components/ViewProjects';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -15,6 +16,7 @@ root.render(
   <BrowserRouter>
     <Routes>
         <Route exact path="/" element={<App />}/>
+        <Route exact path="viewprojects" element={<ViewProjects />}/>
         <Route path="register" element={<Register />} />
         <Route path="beneficiary" element={<Beneficiary />} />
         <Route path="beneficiary/createproject" element={<CreateProject />} />
@@ -23,3 +25,5 @@ root.render(
     </Routes>
   </BrowserRouter>
 );
+
+

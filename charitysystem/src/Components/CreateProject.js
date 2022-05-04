@@ -9,17 +9,11 @@ function CreateProject() {
   const [description,setDescription] = useState('')
   const [title,setTitle] = useState('')
 
-  const {account,createProject,getProj} = useCharity()
+  const {account,createProject} = useCharity()
 
   const handleClick = (e) => {
     e.preventDefault();
     createProject(title,description)
-  }
-
-  const handlePClick = async(e) => {
-    e.preventDefault();
-    const proj = await getProj()
-    console.log(proj)
   }
 
   return (
@@ -55,9 +49,6 @@ function CreateProject() {
                       Create Project
                   </button>
                   }
-                  <button onClick={(e)=>handlePClick(e)} className="mt-6 w-2/3 py-2 px-4 text-lg font-semibold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                      Get Proj
-                  </button>
                 </div>
             </div>
           </div>
