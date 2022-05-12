@@ -1,20 +1,35 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import RegisterImg from '../assets/Register.PNG'
 import useCharity from '../contract/useCharity'
 import Logo from '../assets/logo.png'
 
-function CreateProject() {
+function CreateRequest() {
 
-  const [description,setDescription] = useState('')
-  const [title,setTitle] = useState('')
+  const [reason,setReason] = useState('')
+  const [amount,setAmount] = useState(0)
+  const [projId,setProjId] = useState(0)
+  const [projects,setProjects] = useState([])
 
-  const {account,createProject} = useCharity()
+  const {account,createRequest,getProjects} = useCharity()
 
   const handleClick = (e) => {
     e.preventDefault();
-    createProject(title,description)
+    console.log(reason,amount,projId)
+    // createRequest(reason,amount,projId)
   }
+
+  const getProj = async() => {
+    const p = await getProjects()
+    setProjects(p) 
+    console.log(p)
+    console.log(p[0].creator,account,p[0].creator.toUpperCase()==account.toUpperCase())
+  }
+
+  useEffect(()=>{
+    getProj()
+  },[])
+
 
   return (
       <div className="bg-black h-screen w-screen">
@@ -32,21 +47,34 @@ function CreateProject() {
           </div>
           <div className="flex-1 px-16">
             <div className="bg-gray-900 flex flex-col p-6 rounded-lg items-center">
-                <label className="text-white font-bold mb-3 text-3xl">Enter Project Details</label>
+                <label className="text-white font-bold mb-3 text-3xl">Enter Request Details</label>
                 <div className="flex flex-col space-y-2 w-full my-2">
-                  <label className="text-white text-lg font-semibold">Title : </label>
-                  <input name="Title" type="text" value={title} onChange={(e)=>setTitle(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Title"/>
+                  <label className="text-white text-lg font-semibold">Reason : </label>
+                  <input name="Reason" type="text" value={reason} onChange={(e)=>setReason(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Reason"/>
                 </div>
                 <div className="flex flex-col space-y-2 w-full my-2">
-                  <label className="text-white text-lg font-semibold">Description : </label>
-                  <input name="Description" type="text" value={description} onChange={(e)=>setDescription(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Description"/>
+                {
+                    projects.length!=0?
+                    <>
+                    <label className="text-white text-lg font-semibold">Project :</label>
+                    <select className="w-1/3 bg-gray-600 text-white px-3 py-2" value={projId} onChange={(e)=>setProjId(e.target.value)}>
+                    {projects.map((proj,id)=>(
+                        proj.creator.toUpperCase()===account.toUpperCase()?(
+                            <option className="px-4 py-2" key={id} value={id}>{proj.title}</option>
+                        )                   
+                        :null
+                    ))}
+                    </select>
+                    </> 
+                    :<span className="text-white text-xl">No Projects Created by Beneficiary</span>
+                    }
                 </div>
                 <div className="w-full flex flex-col items-center">
                   {!account?<button className="mt-8 w-2/3 py-2 px-4 text-lg font-semibold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                       Connect to MetaMask
                   </button>:
                   <button onClick={(e)=>handleClick(e)} className="mt-6 w-2/3 py-2 px-4 text-lg font-semibold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                      Create Project
+                      Create Request
                   </button>
                   }
                 </div>
@@ -57,4 +85,4 @@ function CreateProject() {
   )
 }
 
-export default CreateProject
+export default CreateRequest

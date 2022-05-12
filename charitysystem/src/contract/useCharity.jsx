@@ -51,13 +51,18 @@ const useCharity = () => {
         setCurrentUser({wallet,name,username,usertype})
         return user
     }
-
+    
     const getProjects = async() => {
         const contract = getCharityContract();
         const proj = await contract.getProjects()
         return proj
     }
 
+    const getRequests = async() => {
+        const contract = getCharityContract();
+        const req = await contract.getRequests()
+        return req
+    }
     const createUser = async (username,uName,userType) => {
         const contract = getCharityContract();
         const user = await contract.register(username,uName,userType)
@@ -68,7 +73,12 @@ const useCharity = () => {
         const project = await contract.createProject(description,title)
     }
 
-    return {connect,account:currentAccount,user:currentUser,createUser,getUser,createProject,getProjects}
+    const createRequest = async (reason,amount,projId) => {
+        const contract = getCharityContract();
+        const req = await contract.createRequest(reason,amount,projId)
+    }
+
+    return {connect,account:currentAccount,user:currentUser,createUser,getUser,createProject,getProjects,getRequests,createRequest}
     // const CharityContract = getCharity()
 }
 
