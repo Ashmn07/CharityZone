@@ -36,16 +36,57 @@ contract Charity{
         string title;
         string description;
         address creator;
+        uint investorCount;
     }
 
     function createProject(string memory d,string memory t) public {
         require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
         == keccak256(abi.encodePacked(("beneficiary"))));
-        Project memory temp = Project(t,d,msg.sender);
+        Project memory temp = Project(t,d,msg.sender,0);
         projects.push(temp);
     }
 
     function getProjects() public view returns (Project[] memory){
         return projects;
+    }
+
+    struct Request{
+        string reason;
+        address requestor;
+        uint amount;
+        uint reqId;
+        bool verified;
+        Project proj;
+    }
+
+    Request[] public requests;
+
+    function reqDel(uint index) internal {
+        require(index < requests.length);
+        requests[index] = requests[requests.length-1];
+        requests.pop();
+    }
+
+    function createRequest(string memory r,uint amount,uint projId) public {
+        require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
+        == keccak256(abi.encodePacked(("beneficiary"))));
+        Request memory temp = Request(r,msg.sender,amount,block.number,false,projects[projId]);   
+        requests.push(temp);
+    }
+
+    function getRequests() public view returns (Request[] memory){
+        return requests;
+    }
+
+    function rejectRequest(uint reqId) public {
+        require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
+        == keccak256(abi.encodePacked(("validator"))));
+        reqDel(reqId);
+    }
+
+    function approveRequest(uint reqId) public {
+        require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
+        == keccak256(abi.encodePacked(("validator"))));
+        requests[reqId].verified=true;
     }
 }
