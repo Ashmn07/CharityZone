@@ -30,12 +30,12 @@ function ViewRequests() {
       </nav>
        <div className="w-full px-16 py-32">
             <h1 className="text-white mb-8 font-bold text-4xl">Charity Requests</h1>
-            <div className="flex flex-wrap space-x-16">
+            <div className="grid grid-cols-3 gap-6">
            {requests.length==0?
            <span className="text-white font-bold text-4xl">No requests Yet</span>
            :
             requests.map((req,id)=>(
-                <div key={id} className="block p-6 max-w-sm rounded-lg border  shadow-md  bg-gray-800 border-gray-700 hover:bg-gray-700">
+                <div key={id} className="p-6 rounded-lg border shadow-md bg-gray-800 border-gray-700 hover:bg-gray-700">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-white">{req.reason}</h5>
                 {/* <p class="font-normal text-gray-400">{req.amount}</p> */}
                 </div>

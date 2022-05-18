@@ -60,7 +60,7 @@ function Beneficiary() {
             </div>
           </div>
           <div className="flex items-center justify-center flex-1 px-16">
-            <img src={BeneficiaryImg} className="h-3/4 w-3/4" alt="Charity Logo" />
+            <img src={BeneficiaryImg} className="h-3/4 w-3/4" alt="Beneficiary Img" />
           </div>
       </div>
     </div>

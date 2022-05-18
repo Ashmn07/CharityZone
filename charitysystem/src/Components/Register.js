@@ -63,8 +63,8 @@ function Register() {
             </div>
         </nav>
         <div className="flex justify-center items-center h-full w-full">
-          <div className="flex-1 px-16">
-          <img src={RegisterImg} className="" alt="Charity Logo" />
+          <div className="flex flex-1 justify-center items-center">
+          <img src={RegisterImg} className="h-3/4" alt="Charity Logo" />
           </div>
           <div className="flex-1 px-16">
             <div className="bg-gray-900 flex flex-col p-6 rounded-lg items-center">
