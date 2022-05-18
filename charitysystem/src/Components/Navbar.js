@@ -1,4 +1,4 @@
-import Logo from '../assets/logo.png'
+import Logo from '../assets/logo2.png'
 import { Link } from 'react-router-dom'
 import useCharity from '../contract/useCharity'
 import { useNavigate } from "react-router-dom";

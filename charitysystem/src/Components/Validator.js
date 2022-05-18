@@ -1,7 +1,7 @@
 import React from 'react'
 import {useLocation,Link} from 'react-router-dom';
 import useCharity from '../contract/useCharity'
-import Logo from '../assets/logo.png'
+import Logo from '../assets/logo2.png'
 
 function Validator() {
   const location = useLocation()

@@ -2,28 +2,32 @@ import React,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import RegisterImg from '../assets/Register.PNG'
 import useCharity from '../contract/useCharity'
-import Logo from '../assets/logo.png'
+import Logo from '../assets/logo2.png'
 
 function CreateRequest() {
 
   const [reason,setReason] = useState('')
   const [amount,setAmount] = useState(0)
-  const [projId,setProjId] = useState(0)
+  const [projId,setProjId] = useState(-1)
   const [projects,setProjects] = useState([])
 
-  const {account,createRequest,getProjects} = useCharity()
+  const {account,createRequest,getProjects,getRequests} = useCharity()
 
   const handleClick = (e) => {
     e.preventDefault();
-    console.log(reason,amount,projId)
-    // createRequest(reason,amount,projId)
+    if(projId===-1){
+      alert("Please Select a Project")
+      return;
+    }
+    //console.log(reason,amount,projId)
+    createRequest(reason,amount,projId)
   }
 
   const getProj = async() => {
     const p = await getProjects()
     setProjects(p) 
-    console.log(p)
-    console.log(p[0].creator,account,p[0].creator.toUpperCase()==account.toUpperCase())
+    const r = await getRequests()
+    console.log(r)
   }
 
   useEffect(()=>{
@@ -53,14 +57,19 @@ function CreateRequest() {
                   <input name="Reason" type="text" value={reason} onChange={(e)=>setReason(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Reason"/>
                 </div>
                 <div className="flex flex-col space-y-2 w-full my-2">
+                  <label className="text-white text-lg font-semibold">Amount : </label>
+                  <input name="Amount" type="number" value={amount} onChange={(e)=>setAmount(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Amount"/>
+                </div>
+                <div className="flex flex-col space-y-2 w-full my-2">
                 {
                     projects.length!=0?
                     <>
                     <label className="text-white text-lg font-semibold">Project :</label>
                     <select className="w-1/3 bg-gray-600 text-white px-3 py-2" value={projId} onChange={(e)=>setProjId(e.target.value)}>
+                    <option className="px-4 py-2" key={0} value={-1}>Select Project</option>
                     {projects.map((proj,id)=>(
                         proj.creator.toUpperCase()===account.toUpperCase()?(
-                            <option className="px-4 py-2" key={id} value={id}>{proj.title}</option>
+                            <option className="px-4 py-2" key={id+1} value={id}>{proj.title}</option>
                         )                   
                         :null
                     ))}

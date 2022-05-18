@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import { Link } from 'react-router-dom'
 import RegisterImg from '../assets/Register.PNG'
 import useCharity from '../contract/useCharity'
-import Logo from '../assets/logo.png'
+import Logo from '../assets/logo2.png'
 
 function CreateProject() {
 

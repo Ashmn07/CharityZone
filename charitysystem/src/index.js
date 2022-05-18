@@ -10,6 +10,7 @@ import Validator from './Components/Validator';
 import CreateProject from './Components/CreateProject';
 import ViewProjects from './Components/ViewProjects';
 import CreateRequest from './Components/CreateRequest';
+import ViewRequests from './Components/ViewRequests';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -22,6 +23,7 @@ root.render(
         <Route path="beneficiary" element={<Beneficiary />} />
         <Route path="beneficiary/createproject" element={<CreateProject />} />
         <Route path="beneficiary/createrequest" element={<CreateRequest />} />
+        <Route path="beneficiary/viewrequests" element={<ViewRequests />} />
         <Route path="donor" element={<Donor />} />
         <Route path="validator" element={<Validator />} />
     </Routes>

@@ -78,7 +78,14 @@ const useCharity = () => {
         const req = await contract.createRequest(reason,amount,projId)
     }
 
-    return {connect,account:currentAccount,user:currentUser,createUser,getUser,createProject,getProjects,getRequests,createRequest}
+    const getValSecret = async () => {
+        const contract = getCharityContract();
+        const secret = await contract.getValidatorSecret()
+        return secret
+    }
+
+    return {connect,account:currentAccount,user:currentUser,createUser,getValSecret,
+        getUser,createProject,getProjects,getRequests,createRequest}
     // const CharityContract = getCharity()
 }
 

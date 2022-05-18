@@ -2,15 +2,17 @@ import React,{useState} from 'react'
 import { Link } from 'react-router-dom'
 import RegisterImg from '../assets/Register.PNG'
 import useCharity from '../contract/useCharity'
-import Logo from '../assets/logo.png'
+import Logo from '../assets/logo2.png'
 
 function Register() {
 
   const [userType,setUserType] = useState('beneficiary')
   const [userName,setUserName] = useState('')
   const [uName,setName] = useState('')
+  const [key,setKey] = useState(false)
+  const [secret,setSecret] = useState('')
 
-  const {connect,account,createUser,getUser} = useCharity()
+  const {connect,account,createUser,getUser,getValSecret} = useCharity()
 
   const userOptions = [
     { label: 'Beneficiary', value: 'beneficiary',key:1 },
@@ -20,7 +22,23 @@ function Register() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    createUser(userName,uName,userType)
+    if(userType==="validator"){
+      setKey(true)
+    }
+    else{
+      createUser(userName,uName,userType) 
+    }
+  }
+
+  const registerUser = async(e) => {
+    e.preventDefault()
+    const s = await getValSecret()
+    if(secret===s){
+      createUser(userName,uName,userType)
+    }
+    else{
+      alert("Wrong Secret Entered! Registration failed")
+    }
   }
 
   const handleConnect = (e) => {
@@ -56,7 +74,7 @@ function Register() {
                 </div>
                 <div className="flex flex-col space-y-2 w-full my-2">
                   <label className="text-white text-lg font-semibold">Name : </label>
-                  <input name="Email" type="email" value={uName} onChange={(e)=>setName(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Name"/>
+                  <input name="Name" type="text" value={uName} onChange={(e)=>setName(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Name"/>
                 </div>
                 <div className="flex flex-col space-y-2 w-full my-2">
                   <label className="text-white text-lg font-semibold">User Type :</label>
@@ -66,13 +84,25 @@ function Register() {
                     ))}
                   </select>
                 </div>
+                {key?
+                <>
+                <div className="flex flex-col space-y-2 w-full my-2">
+                  <label className="text-white text-lg font-semibold">Enter Validator Secret : </label>
+                  <input name="text" type="text" value={secret} onChange={(e)=>setSecret(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Enter Secret"/>
+                </div>
+                <div className="w-full flex flex-col items-center">
+                  <button onClick={(e)=>registerUser(e)} className="mt-6 w-2/3 py-2 px-4 text-lg font-semibold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                      Verify Secret
+                  </button>
+                </div></>:null}
                 <div className="w-full flex flex-col items-center">
                   {!account?<button onClick={(e)=>handleConnect(e)} className="mt-8 w-2/3 py-2 px-4 text-lg font-semibold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                       Connect MetaMask
                   </button>:
+                  !key?
                   <button onClick={(e)=>handleClick(e)} className="mt-6 w-2/3 py-2 px-4 text-lg font-semibold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                       Register
-                  </button>
+                  </button>:null
                   }
                 </div>
             </div>

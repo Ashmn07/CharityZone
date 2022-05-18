@@ -26,6 +26,10 @@ contract Charity{
         usernames[msg.sender] = _username;
     }
 
+    function getValidatorSecret() public pure returns(string memory){
+        return "AUCZ";
+    }
+
     function getUser(address _wallet) public view returns (User memory){
         return users[usernames[_wallet]];
     }
