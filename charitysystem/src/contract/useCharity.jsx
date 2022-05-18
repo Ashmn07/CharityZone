@@ -84,8 +84,20 @@ const useCharity = () => {
         return secret
     }
 
+    const acceptRequest = async (reqId) => {
+        const contract = getCharityContract();
+        // console.log(reqId);
+        const r = await contract.approveRequest(reqId)
+    }
+
+    const rejectRequest = async (reqId) => {
+        const contract = getCharityContract();
+        // console.log(reqId);
+        const r = await contract.rejectRequest(reqId)
+    }
+
     return {connect,account:currentAccount,user:currentUser,createUser,getValSecret,
-        getUser,createProject,getProjects,getRequests,createRequest}
+        getUser,createProject,getProjects,getRequests,createRequest,acceptRequest,rejectRequest}
     // const CharityContract = getCharity()
 }
 

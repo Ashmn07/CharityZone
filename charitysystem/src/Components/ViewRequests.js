@@ -2,6 +2,7 @@ import { useEffect,useState } from 'react';
 import Logo from '../assets/logo2.png'
 import { Link } from 'react-router-dom'
 import useCharity from '../contract/useCharity'
+import { FaPeopleArrows } from "react-icons/fa";
 
 function ViewRequests() {
 
@@ -35,9 +36,25 @@ function ViewRequests() {
            <span className="text-white font-bold text-4xl">No requests Yet</span>
            :
             requests.map((req,id)=>(
-                <div key={id} className="p-6 rounded-lg border shadow-md bg-gray-800 border-gray-700 hover:bg-gray-700">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-white">{req.reason}</h5>
-                {/* <p class="font-normal text-gray-400">{req.amount}</p> */}
+                <div key={id} className="flex flex-col divide-y divide-gray-600 rounded-xl shadow-md bg-gray-800 border-gray-700">
+                  <div className="flex items-center justify-left space-x-4 py-4 px-6">
+                    <FaPeopleArrows className="text-white text-xl"/>
+                    <h5 className="text-xl font-bold text-white">{req.reason}</h5>
+                  </div>
+                  <div className="flex py-4 items-center justify-left space-x-4 px-6">
+                    <div className="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                        <svg className="absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                    </div>
+                    <p className="text-lg font-semibold text-white">{req.requestor}</p>
+                  </div>
+                  <div className="py-4 flex items-center justify-between px-6">
+                    <p className="font-normal text-gray-400">Amount : {req.amount.toNumber()} ether</p>
+                    <p className="font-normal text-gray-400">Project : {req.proj.title}</p>
+                  </div>
+                  <div className="flex items-center w-full">
+                    <button className="font-semibold text-lg flex-1 py-2 px-4 bg-green-500 cursor-pointer hover:bg-green-700 rounded-bl-xl">Accept</button>
+                    <button className="font-semibold text-lg flex-1 py-2 px-4 bg-red-600 cursor-pointer hover:bg-red-800 rounded-br-xl">Reject</button>
+                  </div>
                 </div>
             ))
            }

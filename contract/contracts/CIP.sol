@@ -56,7 +56,7 @@ contract Charity{
 
     struct Request{
         string reason;
-        address requestor;
+        string requestor;
         uint amount;
         uint reqId;
         bool verified;
@@ -74,7 +74,7 @@ contract Charity{
     function createRequest(string memory r,uint amount,uint projId) public {
         require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
         == keccak256(abi.encodePacked(("beneficiary"))));
-        Request memory temp = Request(r,msg.sender,amount,block.number,false,projects[projId]);   
+        Request memory temp = Request(r,usernames[msg.sender],amount,block.number,false,projects[projId]);   
         requests.push(temp);
     }
 
