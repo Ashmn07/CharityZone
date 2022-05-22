@@ -9,6 +9,7 @@ function CreateRequest() {
   const [reason,setReason] = useState('')
   const [amount,setAmount] = useState(0)
   const [projId,setProjId] = useState(-1)
+  const [phNo,setPhNo] = useState('')
   const [projects,setProjects] = useState([])
 
   const {account,createRequest,getProjects,getRequests} = useCharity()
@@ -20,7 +21,7 @@ function CreateRequest() {
       return;
     }
     //console.log(reason,amount,projId)
-    createRequest(reason,amount,projId)
+    createRequest(reason,amount,projId,phNo)
   }
 
   const getProj = async() => {
@@ -55,6 +56,10 @@ function CreateRequest() {
                 <div className="flex flex-col space-y-2 w-full my-2">
                   <label className="text-white text-lg font-semibold">Reason : </label>
                   <input name="Reason" type="text" value={reason} onChange={(e)=>setReason(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Reason"/>
+                </div>
+                <div className="flex flex-col space-y-2 w-full my-2">
+                  <label className="text-white text-lg font-semibold">Contact No : </label>
+                  <input name="Reason" type="text" value={phNo} onChange={(e)=>setPhNo(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Contact No"/>
                 </div>
                 <div className="flex flex-col space-y-2 w-full my-2">
                   <label className="text-white text-lg font-semibold">Amount : </label>

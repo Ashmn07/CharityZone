@@ -51,7 +51,7 @@ const useCharity = () => {
         setCurrentUser({wallet,name,username,usertype})
         return user
     }
-    
+
     const getProjects = async() => {
         const contract = getCharityContract();
         const proj = await contract.getProjects()
@@ -63,9 +63,15 @@ const useCharity = () => {
         const req = await contract.getRequests()
         return req
     }
+
     const createUser = async (username,uName,userType) => {
         const contract = getCharityContract();
         const user = await contract.register(username,uName,userType)
+    }
+
+    const createB = async(username,uName,userType,link) => {
+        const contract = getCharityContract();
+        const user = await contract.registerB(username,uName,userType,link)
     }
 
     const createProject = async (title,description) => {
@@ -73,9 +79,9 @@ const useCharity = () => {
         const project = await contract.createProject(description,title)
     }
 
-    const createRequest = async (reason,amount,projId) => {
+    const createRequest = async (reason,amount,projId,phNo) => {
         const contract = getCharityContract();
-        const req = await contract.createRequest(reason,amount,projId)
+        const req = await contract.createRequest(reason,amount,projId,phNo)
     }
 
     const getValSecret = async () => {
@@ -88,15 +94,17 @@ const useCharity = () => {
         const contract = getCharityContract();
         // console.log(reqId);
         const r = await contract.approveRequest(reqId)
+        return r;
     }
 
     const rejectRequest = async (reqId) => {
         const contract = getCharityContract();
         // console.log(reqId);
         const r = await contract.rejectRequest(reqId)
+        return r;
     }
 
-    return {connect,account:currentAccount,user:currentUser,createUser,getValSecret,
+    return {connect,account:currentAccount,user:currentUser,createUser,getValSecret,createB,
         getUser,createProject,getProjects,getRequests,createRequest,acceptRequest,rejectRequest}
     // const CharityContract = getCharity()
 }

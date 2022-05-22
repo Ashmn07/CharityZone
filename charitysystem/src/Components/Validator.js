@@ -8,6 +8,7 @@ function Validator() {
   const location = useLocation()
   const {getRequests,acceptRequest,rejectRequest} = useCharity()
   const [requests,setRequests] = useState([])
+  const [rel,setRel] = useState(false)
 
   const getR = async () => {
     const r = await getRequests()
@@ -17,17 +18,21 @@ function Validator() {
 
   const aR = async (e,rId) => {
     e.preventDefault()
-    acceptRequest(rId)
+    const r = await acceptRequest(rId)
+    const temp = requests.filter((req,id) => rId!==id)
+    setRequests(temp)
   }
 
   const rR = async (e,rId) => {
     e.preventDefault()
-    rejectRequest(rId)
+    const r = rejectRequest(rId)
+    const temp = requests.filter((req,id) => rId!==id)
+    setRequests(temp)
   }
 
   useEffect(()=>{
     getR()
-  },[])
+  },[rel])
 
   return (
     <div className="bg-black h-screen w-screen">
@@ -35,7 +40,7 @@ function Validator() {
           <div className="container flex flex-wrap justify-between items-center mx-auto px-6 py-2">
               <div className="flex items-center">
                   <img src={Logo} className="mr-3 h-6 sm:h-9" alt="Charity Zone Logo" />
-                  <Link to="/validator" className="self-center text-4xl font-bold whitespace-nowrap text-white hover:text-gray-300 cursor-pointer">Charity Zone</Link>
+                  <Link to="/" className="self-center text-4xl font-bold whitespace-nowrap text-white hover:text-gray-300 cursor-pointer">Charity Zone</Link>
               </div>
               <div className="text-white">
                 <span className="mx-4 font-semibold text-lg">Welcome {location.state.name}</span>
@@ -52,9 +57,11 @@ function Validator() {
            <span className="text-white font-bold text-4xl">No requests Yet</span>
            :
             requests.map((req,id)=>(
+              req.verified===false?
                 <div key={id} className="flex flex-col divide-y divide-gray-600 rounded-xl shadow-md bg-gray-800 border-gray-700">
                   <div className="flex items-center justify-left space-x-4 py-4 px-6">
                     <FaPeopleArrows className="text-white text-xl"/>
+                    {console.log(req.verified)}
                     <h5 className="text-xl font-bold text-white">{req.reason}</h5>
                   </div>
                   <div className="flex py-4 items-center justify-left space-x-4 px-6">
@@ -63,15 +70,20 @@ function Validator() {
                     </div>
                     <p className="text-lg font-semibold text-white">{req.requestor}</p>
                   </div>
+                  <div className="py-4 flex flex-col justify-center items-between px-6">
+                    <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Beneficiary Link : </span><a className="text-blue-400" href={req.reqLink}>{req.reqLink}</a></p>
+                    <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Contact No : </span>{req.phno}</p>
+
+                  </div>
                   <div className="py-4 flex items-center justify-between px-6">
-                    <p className="font-normal text-gray-400">Amount : {req.amount.toNumber()} ether</p>
-                    <p className="font-normal text-gray-400">Project : {req.proj.title}</p>
+                    <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Amount : </span>{req.amount.toNumber()} ether</p>
+                    <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Project : </span>{req.proj.title}</p>
                   </div>
                   <div className="flex items-center w-full">
-                    <button onClick={(e)=> aR(e,req.reqId)} className="font-semibold text-lg flex-1 py-2 px-4 bg-green-500 cursor-pointer hover:bg-green-700 rounded-bl-xl">Accept</button>
-                    <button onClick={(e)=> rR(e,req.reqId)} className="font-semibold text-lg flex-1 py-2 px-4 bg-red-600 cursor-pointer hover:bg-red-800 rounded-br-xl">Reject</button>
+                    <button onClick={(e)=> aR(e,id)} className="font-semibold text-lg flex-1 py-2 px-4 bg-green-500 cursor-pointer hover:bg-green-700 rounded-bl-xl">Accept</button>
+                    <button onClick={(e)=> rR(e,id)} className="font-semibold text-lg flex-1 py-2 px-4 bg-red-600 cursor-pointer hover:bg-red-800 rounded-br-xl">Reject</button>
                   </div>
-                </div>
+                </div>:null
             ))
            }
            </div>
