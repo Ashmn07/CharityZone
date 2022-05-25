@@ -104,9 +104,14 @@ const useCharity = () => {
         return r;
     }
 
-    return {connect,account:currentAccount,user:currentUser,createUser,getValSecret,createB,
+    const donate = async (projId,amt) => {
+        const contract = getCharityContract();
+        const transaction = await contract.donate({ value: ethers.utils.parseEther(amt).toHexString() })
+        await transaction.wait()
+    }
+
+    return {connect,account:currentAccount,user:currentUser,createUser,getValSecret,createB,donate,
         getUser,createProject,getProjects,getRequests,createRequest,acceptRequest,rejectRequest}
-    // const CharityContract = getCharity()
 }
 
 export default useCharity

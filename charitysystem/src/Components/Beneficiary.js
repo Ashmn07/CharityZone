@@ -49,8 +49,8 @@ function Beneficiary() {
             <div className="flex flex-wrap items-center justify-center ">
             {
               options.map((op)=>(
-                <Link to={op.route}>
-                  <div className="bg-gray-900 flex-wrap py-7 px-12 my-4 mx-6 rounded-md flex flex-col min-w-max min-h-max" key={op.id}>
+                <Link to={op.route}  key={op.id}>
+                  <div className="bg-gray-900 flex-wrap py-7 px-12 my-4 mx-6 rounded-md flex flex-col min-w-max min-h-max">
                     <op.icon className="text-white text-4xl font-bold self-center"/>
                     <span className="my-3 text-white text-2xl font-bold">{op.title}</span>
                   </div>

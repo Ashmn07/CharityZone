@@ -1,13 +1,14 @@
+import {useLocation,Link} from 'react-router-dom';
 import { useEffect,useState } from 'react';
 import Logo from '../assets/logo2.png'
-import { Link } from 'react-router-dom'
 import useCharity from '../contract/useCharity'
 import { FaPeopleArrows } from "react-icons/fa";
 
 function ViewRequests() {
-
-  const {getRequests} = useCharity()
+  const location = useLocation()
+  const {getRequests,acceptRequest,rejectRequest} = useCharity()
   const [requests,setRequests] = useState([])
+  const [rel,setRel] = useState(false)
 
   const getR = async () => {
     const r = await getRequests()
@@ -15,21 +16,35 @@ function ViewRequests() {
     setRequests(r)
   }
 
+  const aR = async (e,rId) => {
+    e.preventDefault()
+    const r = await acceptRequest(rId)
+    const temp = requests.filter((req,id) => rId!==id)
+    setRequests(temp)
+  }
+
+  const rR = async (e,rId) => {
+    e.preventDefault()
+    const r = rejectRequest(rId)
+    const temp = requests.filter((req,id) => rId!==id)
+    setRequests(temp)
+  }
+
   useEffect(()=>{
     getR()
-  },[])
+  },[rel])
 
   return (
-    <div className="bg-black min-h-screen min-w-screen">
+    <div className="bg-black h-screen w-screen">
       <nav className="border-gray-200 px-10 py-2.5 fixed w-full">
-        <div className="container flex flex-wrap justify-between items-center mx-auto px-6 py-2">
-            <div className="flex items-center">
-                <img src={Logo} className="mr-3 h-6 sm:h-9" alt="Charity Zone Logo" />
-                <Link to="/" className="self-center text-4xl font-bold whitespace-nowrap text-white hover:text-gray-300 cursor-pointer">Charity Zone</Link>
-            </div>
-        </div>
+          <div className="container flex flex-wrap justify-between items-center mx-auto px-6 py-2">
+              <div className="flex items-center">
+                  <img src={Logo} className="mr-3 h-6 sm:h-9" alt="Charity Zone Logo" />
+                  <Link to="/" className="self-center text-4xl font-bold whitespace-nowrap text-white hover:text-gray-300 cursor-pointer">Charity Zone</Link>
+              </div>
+          </div>
       </nav>
-       <div className="w-full px-16 py-32">
+      <div className="w-full px-16 py-32">
             <h1 className="text-white mb-8 font-bold text-4xl">Charity Requests</h1>
             <div className="grid grid-cols-3 gap-6">
            {requests.length==0?
@@ -39,6 +54,7 @@ function ViewRequests() {
                 <div key={id} className="flex flex-col divide-y divide-gray-600 rounded-xl shadow-md bg-gray-800 border-gray-700">
                   <div className="flex items-center justify-left space-x-4 py-4 px-6">
                     <FaPeopleArrows className="text-white text-xl"/>
+                    {console.log(req.verified)}
                     <h5 className="text-xl font-bold text-white">{req.reason}</h5>
                   </div>
                   <div className="flex py-4 items-center justify-left space-x-4 px-6">
@@ -47,21 +63,26 @@ function ViewRequests() {
                     </div>
                     <p className="text-lg font-semibold text-white">{req.requestor}</p>
                   </div>
+                  <div className="py-4 flex flex-col justify-center items-between px-6">
+                    <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Beneficiary Link : </span><a className="text-blue-400" href={req.reqLink}>{req.reqLink}</a></p>
+                    <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Contact No : </span>{req.phno}</p>
+
+                  </div>
                   <div className="py-4 flex items-center justify-between px-6">
-                    <p className="font-normal text-gray-400">Amount : {req.amount.toNumber()} ether</p>
-                    <p className="font-normal text-gray-400">Project : {req.proj.title}</p>
+                    <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Amount : </span>{req.amount.toNumber()} ether</p>
+                    <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Project : </span>{req.proj.title}</p>
                   </div>
                   <div className="flex items-center w-full">
-                    <button className="font-semibold text-lg flex-1 py-2 px-4 bg-green-500 cursor-pointer hover:bg-green-700 rounded-bl-xl">Accept</button>
-                    <button className="font-semibold text-lg flex-1 py-2 px-4 bg-red-600 cursor-pointer hover:bg-red-800 rounded-br-xl">Reject</button>
+                    <button onClick={(e)=> aR(e,id)} className="font-semibold text-lg flex-1 py-2 px-4 bg-green-500 cursor-pointer hover:bg-green-700 rounded-bl-xl">Approve</button>
+                    <button onClick={(e)=> rR(e,id)} className="font-semibold text-lg flex-1 py-2 px-4 bg-red-600 cursor-pointer hover:bg-red-800 rounded-br-xl">Reject</button>
                   </div>
                 </div>
             ))
            }
            </div>
-       </div>     
+       </div>  
     </div>
-  );
+  )
 }
 
-export default ViewRequests;
+export default ViewRequests

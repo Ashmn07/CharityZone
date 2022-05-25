@@ -49,16 +49,23 @@ contract Charity{
 
     Project[] public projects;
 
+     struct Donation{
+        address donor;
+        uint amt;
+    }
+
     struct Project{
         string title;
         string description;
         address creator;
+        uint donorCount;
+        uint projectId;
     }
 
     function createProject(string memory d,string memory t) public {
         require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
         == keccak256(abi.encodePacked(("beneficiary"))));
-        Project memory temp = Project(t,d,msg.sender);
+        Project memory temp = Project(t,d,msg.sender,0,block.number);
         projects.push(temp);
     }
 
@@ -72,27 +79,21 @@ contract Charity{
 
      struct Request{
         string reason;
+        address payable recepient;
         string requestor;
         uint amount;
         uint reqId;
         string reqLink;
-        bool verified;
         Project proj;
         string phno;
     }
 
     Request[] public requests;
 
-    function reqDel(uint index) internal {
-        require(index < requests.length);
-        requests[index] = requests[requests.length-1];
-        requests.pop();
-    }
-
     function createRequest(string memory r,uint amount,uint projId,string memory phno) public {
         require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
         == keccak256(abi.encodePacked(("beneficiary"))));
-        Request memory temp = Request(r,usernames[msg.sender],amount,block.number,beneficiaryLinks[msg.sender],false,projects[projId],phno);   
+        Request memory temp = Request(r,payable(msg.sender),usernames[msg.sender],amount,block.number,beneficiaryLinks[msg.sender],projects[projId],phno);   
         requests.push(temp);
     }
 
@@ -100,15 +101,47 @@ contract Charity{
         return requests;
     }
 
+    Request[] public delRequests;
+    Request[] public valRequests;
+
+    function reqDel(uint index) internal {
+        require(index < requests.length);
+        requests[index] = requests[requests.length-1];
+        requests.pop();
+    }
+
+    function getDelRequests() public view returns (Request[] memory){
+        return delRequests;
+    }
+    function getValRequests() public view returns (Request[] memory){
+        return valRequests;
+    }
+
     function rejectRequest(uint reqId) public {
         require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
         == keccak256(abi.encodePacked(("validator"))));
+        delRequests.push(requests[reqId]);
         reqDel(reqId);
     }
 
     function approveRequest(uint reqId) public {
         require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
         == keccak256(abi.encodePacked(("validator"))));
-        requests[reqId].verified=true;
+        valRequests.push(requests[reqId]);
+        reqDel(reqId);
     }
+
+    mapping(uint => mapping(address => uint)) donations;
+
+    function donate(uint projId) payable public {
+        require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
+        == keccak256(abi.encodePacked(("donor"))));
+        donations[projId][msg.sender]+=msg.value;
+    }
+
+    function showDonations(uint projId) public view returns (uint){
+        return donations[projId][msg.sender];
+    }
+
 }
+

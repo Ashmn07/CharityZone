@@ -11,6 +11,8 @@ import CreateProject from './Components/CreateProject';
 import ViewProjects from './Components/ViewProjects';
 import CreateRequest from './Components/CreateRequest';
 import ViewRequests from './Components/ViewRequests';
+import DonateProjects from './Components/DonateProject';
+import ValidationCriteria from './Components/ValidationCriteria';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -23,9 +25,11 @@ root.render(
         <Route path="beneficiary" element={<Beneficiary />} />
         <Route path="beneficiary/createproject" element={<CreateProject />} />
         <Route path="beneficiary/createrequest" element={<CreateRequest />} />
-        <Route path="beneficiary/viewrequests" element={<ViewRequests />} />
         <Route path="donor" element={<Donor />} />
+        <Route path="donor/donateProject" element={<DonateProjects />} />
         <Route path="validator" element={<Validator />} />
+        <Route path="validator/viewRequests" element={<ViewRequests />} />
+        <Route path="validator/validationCriteria" element={<ValidationCriteria />} />
     </Routes>
   </BrowserRouter>
 );

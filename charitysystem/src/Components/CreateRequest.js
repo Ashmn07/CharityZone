@@ -20,7 +20,6 @@ function CreateRequest() {
       alert("Please Select a Project")
       return;
     }
-    //console.log(reason,amount,projId)
     createRequest(reason,amount,projId,phNo)
   }
 
@@ -59,7 +58,7 @@ function CreateRequest() {
                 </div>
                 <div className="flex flex-col space-y-2 w-full my-2">
                   <label className="text-white text-lg font-semibold">Contact No : </label>
-                  <input name="Reason" type="text" value={phNo} onChange={(e)=>setPhNo(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Contact No"/>
+                  <input name="PhoneNo" type="text" value={phNo} onChange={(e)=>setPhNo(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Contact No"/>
                 </div>
                 <div className="flex flex-col space-y-2 w-full my-2">
                   <label className="text-white text-lg font-semibold">Amount : </label>
