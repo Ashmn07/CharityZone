@@ -71,11 +71,8 @@ function CreateRequest() {
                     <label className="text-white text-lg font-semibold">Project :</label>
                     <select className="w-1/3 bg-gray-600 text-white px-3 py-2" value={projId} onChange={(e)=>setProjId(e.target.value)}>
                     <option className="px-4 py-2" key={0} value={-1}>Select Project</option>
-                    {projects.map((proj,id)=>(
-                        proj.creator.toUpperCase()===account.toUpperCase()?(
-                            <option className="px-4 py-2" key={id+1} value={id}>{proj.title}</option>
-                        )                   
-                        :null
+                    {projects?.map((proj,id)=>(
+                      <option className="px-4 py-2" key={id+1} value={id}>{proj.title}</option>
                     ))}
                     </select>
                     </> 

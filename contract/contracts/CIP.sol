@@ -14,9 +14,13 @@ contract Charity{
     mapping(string => User) public users;
     mapping(address => string) beneficiaryLinks;
 
+    function getValidatorSecret() public pure returns(string memory){
+        return "AUCZ";
+    }
+
     function register(string memory _username,string memory _name,string memory _usertype) public {
-        require(bytes(usernames[msg.sender]).length==0,"User already exists");
-        require(users[_username].wallet == address(0),"Username is already taken, Try another");
+        require(bytes(usernames[msg.sender]).length==0,"User exists");
+        require(users[_username].wallet == address(0),"Username taken");
 
         users[_username] = User({
             wallet:msg.sender,
@@ -28,8 +32,8 @@ contract Charity{
     }
 
     function registerB(string memory _username,string memory _name,string memory _usertype,string memory link) public {
-        require(bytes(usernames[msg.sender]).length==0,"User already exists");
-        require(users[_username].wallet == address(0),"Username is already taken, Try another");
+        require(bytes(usernames[msg.sender]).length==0,"User exists");
+        require(users[_username].wallet == address(0),"Username taken");
 
         users[_username] = User({
             wallet:msg.sender,
@@ -47,34 +51,55 @@ contract Charity{
         return users[usernames[_wallet]];
     }
 
-    Project[] public projects;
-
-     struct Donation{
-        address donor;
-        uint amt;
-    }
-
     struct Project{
         string title;
         string description;
         address creator;
-        uint donorCount;
+        address[] donors;
+        uint amt;
         uint projectId;
+        mapping(address=>uint) contributions;
     }
+
+    struct ProjDetails{
+        string title;
+        string description;
+        uint amt;
+        uint donorCount;
+    }
+
+    mapping(uint=>Project) public projs;
+    uint public numProjs;
+
+    ProjDetails[] public projDetails;
 
     function createProject(string memory d,string memory t) public {
         require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
         == keccak256(abi.encodePacked(("beneficiary"))));
-        Project memory temp = Project(t,d,msg.sender,0,block.number);
-        projects.push(temp);
+        Project storage newProj = projs[numProjs];
+        numProjs++;
+        newProj.title=t;
+        newProj.description=d;
+        newProj.creator = msg.sender;
+        newProj.donors = new address[](0);
+        newProj.amt=0;
+        newProj.projectId=block.number;
+        ProjDetails memory temp = ProjDetails(t,d,0,0);
+        projDetails.push(temp);
     }
 
-    function getValidatorSecret() public pure returns(string memory){
-        return "AUCZ";
+    function getProjects() public view returns(ProjDetails[] memory){
+        return projDetails;
     }
 
-    function getProjects() public view returns (Project[] memory){
-        return projects;
+    function donateMoney(uint projId) public payable {
+        require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
+        == keccak256(abi.encodePacked(("donor"))));
+        projs[projId].donors.push(msg.sender);
+        projs[projId].contributions[msg.sender]+=msg.value;
+        projs[projId].amt+=msg.value;
+        projDetails[projId].amt+=msg.value;
+        projDetails[projId].donorCount++;   
     }
 
      struct Request{
@@ -84,7 +109,8 @@ contract Charity{
         uint amount;
         uint reqId;
         string reqLink;
-        Project proj;
+        string projTitle;
+        uint projId;
         string phno;
     }
 
@@ -93,7 +119,7 @@ contract Charity{
     function createRequest(string memory r,uint amount,uint projId,string memory phno) public {
         require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
         == keccak256(abi.encodePacked(("beneficiary"))));
-        Request memory temp = Request(r,payable(msg.sender),usernames[msg.sender],amount,block.number,beneficiaryLinks[msg.sender],projects[projId],phno);   
+        Request memory temp = Request(r,payable(msg.sender),usernames[msg.sender],amount,block.number,beneficiaryLinks[msg.sender],projs[projId].title,projId,phno);   
         requests.push(temp);
     }
 
@@ -102,7 +128,6 @@ contract Charity{
     }
 
     Request[] public delRequests;
-    Request[] public valRequests;
 
     function reqDel(uint index) internal {
         require(index < requests.length);
@@ -113,9 +138,6 @@ contract Charity{
     function getDelRequests() public view returns (Request[] memory){
         return delRequests;
     }
-    function getValRequests() public view returns (Request[] memory){
-        return valRequests;
-    }
 
     function rejectRequest(uint reqId) public {
         require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
@@ -124,24 +146,75 @@ contract Charity{
         reqDel(reqId);
     }
 
+    struct voteRequest{
+        string reason;
+        address payable recepient;
+        string recepientLink;
+        uint amount;
+        string projTitle;
+        uint projId;
+        uint noOfVoters;
+        mapping(address => bool)votes;
+    }
+
+    mapping(uint=>voteRequest) public voteRequests;
+    uint public numVoteRequests;
+
+    struct voteRequestDetail{
+        string reason;
+        string recepientLink;
+        uint amount;
+        string projTitle;
+        bool verified;
+        bool approved;
+    }
+
+    voteRequestDetail[] public voteRequestDetails;
+
     function approveRequest(uint reqId) public {
         require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
         == keccak256(abi.encodePacked(("validator"))));
-        valRequests.push(requests[reqId]);
+        voteRequest storage newVoteReq = voteRequests[numVoteRequests];
+        numVoteRequests++;
+        newVoteReq.reason=requests[reqId].reason;
+        newVoteReq.recepient=requests[reqId].recepient;
+        newVoteReq.recepientLink=requests[reqId].reqLink;
+        newVoteReq.amount = requests[reqId].amount;
+        newVoteReq.projTitle=requests[reqId].projTitle;
+        newVoteReq.projId = requests[reqId].projId;
+        newVoteReq.noOfVoters=0;
+        voteRequestDetail memory temp = voteRequestDetail(requests[reqId].reason,requests[reqId].reqLink,requests[reqId].amount,requests[reqId].projTitle,false,false);
+        voteRequestDetails.push(temp);
         reqDel(reqId);
     }
 
-    mapping(uint => mapping(address => uint)) donations;
+    function getVoteRequests() public view returns(voteRequestDetail[] memory){
+        return voteRequestDetails;
+    }
 
-    function donate(uint projId) payable public {
+    function donorVoteRequest(uint _reqNo) public{
         require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
         == keccak256(abi.encodePacked(("donor"))));
-        donations[projId][msg.sender]+=msg.value;
+        require(projs[voteRequests[_reqNo].projId].contributions[msg.sender]>0,"You did'nt donate");
+        voteRequest storage thisRequest=voteRequests[_reqNo];
+        require(thisRequest.votes[msg.sender]==false,"You voted");
+        thisRequest.votes[msg.sender]=true;
+        thisRequest.noOfVoters++;
     }
 
-    function showDonations(uint projId) public view returns (uint){
-        return donations[projId][msg.sender];
+    function makePayment(uint _reqNo) public {
+        require(keccak256(abi.encodePacked((users[usernames[msg.sender]].usertype))) 
+        == keccak256(abi.encodePacked(("validator"))));
+        voteRequest storage thisRequest=voteRequests[_reqNo];
+        voteRequestDetails[_reqNo].verified=true;
+        require(thisRequest.amount<=projs[thisRequest.projId].amt,"No balance");
+        require(thisRequest.noOfVoters > (projs[thisRequest.projId].donors.length)/2,"No Majority");
+        uint256 e = uint256(10)**uint256(18);
+        voteRequestDetails[_reqNo].approved=true;
+        thisRequest.recepient.transfer(thisRequest.amount*e);
     }
 
+    function getBalance() public view returns(uint){
+        return address(this).balance;
+    }
 }
-

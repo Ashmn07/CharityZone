@@ -8,8 +8,8 @@ function DonateProjects() {
   const {getProjects,donate,showDonations} = useCharity()
   const [projects,setProjects] = useState([])
   const [showModal,setShowModal] = useState(false)
-  const [amt,setAmt] = useState(0)
-  const [id,setId] = useState()
+  const [amt,setAmt] = useState("")
+  const [mainId,setMainId] = useState()
 
 //    const showDonations = async () => {
 //     const contract = getCharityContract();
@@ -24,13 +24,15 @@ function DonateProjects() {
 
   const handleClick = (e,id) => {
     e.preventDefault()
-    setId(id)
+    // donate(1,"0.0000003")
+    setMainId(id)
     setShowModal(true)
   }
 
   const handleConfirmClick = (e) => {
     e.preventDefault();
-    donate(id,amt)
+    donate(mainId,amt)
+    // donate(id,String(amt))
   }
 
   const getDets = async(e) => {
@@ -53,18 +55,6 @@ function DonateProjects() {
             </div>
         </div>
         </nav>
-      {
-        showModal?
-        <div className="flex h-screen w-screen justify-center items-center">
-            <div className="w-1/3 flex flex-col">
-                <label className="text-white text-lg font-semibold">Amount : </label>
-                <input name="Amount" type="number" value={amt} onChange={(e)=>setAmt(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Amount"/>
-                <button onClick={(e)=>handleConfirmClick(e)} className="mt-6 w-2/3 py-2 px-4 text-lg font-semibold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Confirm transaction
-                </button>
-            </div>
-        </div>
-        :
         <>
         <div className="w-full px-16 py-32">
           <h1 className="text-white mb-8 font-bold text-4xl">Charity Projects</h1>
@@ -76,15 +66,26 @@ function DonateProjects() {
                 <div className="p-6 rounded-lg border shadow-md bg-gray-800 border-gray-700 hover:bg-gray-700" key={id}>
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">{proj.title}</h5>
                     <p className="font-normal text-gray-400">{proj.description}</p>
-                    <button onClick={(e)=>handleClick(e)} className="text-white mt-4 px-3 py-1 bg-indigo-600 hover:bg-indigo-700 rounded-xl">Donate</button>
+                    <button onClick={(e)=>handleClick(e,id)} className="text-white mt-4 px-3 py-1 bg-indigo-600 hover:bg-indigo-700 rounded-xl">Donate</button>
+                    {
+                      showModal?
+                      id===mainId?
+                      <div className="mt-5 flex flex-col">
+                        <label className="text-white text-lg font-semibold">Amount : </label>
+                        <input name="Amount" type="text" value={amt} onChange={(e)=>setAmt(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none" placeholder="Amount"/>
+                        <button onClick={(e)=>handleConfirmClick(e)} className="mt-6 w-2/3 py-2 px-4 text-lg font-semibold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Confirm transaction
+                        </button>
+                      </div>:null:null
+                    }
                 </div>
             ))
            }
-           {/* <button onClick={(e)=>getDets(e)} className="text-white" >Console check</button> */}
+           {/* <button onClick={(e)=>handleClick(e)} className="text-white" >Console check 1</button> */}
+           <button onClick={(e)=>getDets(e)} className="text-white" >Console check 2</button>
            </div>
         </div> 
-        </>
-        }    
+        </>   
     </div>
   );
 }

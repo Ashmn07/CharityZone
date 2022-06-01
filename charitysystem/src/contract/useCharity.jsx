@@ -1,9 +1,9 @@
 import Charity from './Charity.json'
-import {ethers} from 'ethers'
+import {ethers,BigNumber} from 'ethers'
 import { useEffect, useState } from 'react'
 
 const ContractABI = Charity.abi
-const ContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+const ContractAddress = '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318'
 const Ethereum = typeof window !== 'undefined' && window.ethereum
 
 const getCharityContract = () => {
@@ -55,12 +55,20 @@ const useCharity = () => {
     const getProjects = async() => {
         const contract = getCharityContract();
         const proj = await contract.getProjects()
+        // console.log(proj)
+        // const p = proj.wait()
         return proj
     }
 
     const getRequests = async() => {
         const contract = getCharityContract();
         const req = await contract.getRequests()
+        return req
+    }
+
+    const getVoteRequests = async() => {
+        const contract = getCharityContract();
+        const req = await contract.getVoteRequests()
         return req
     }
 
@@ -106,12 +114,41 @@ const useCharity = () => {
 
     const donate = async (projId,amt) => {
         const contract = getCharityContract();
-        const transaction = await contract.donate({ value: ethers.utils.parseEther(amt).toHexString() })
-        await transaction.wait()
+        console.log(amt)
+        const overrides = {
+            value:ethers.utils.parseEther(amt)
+        }
+        const transaction = await contract.donateMoney(projId,overrides)
+        console.log(transaction)
     }
 
-    return {connect,account:currentAccount,user:currentUser,createUser,getValSecret,createB,donate,
-        getUser,createProject,getProjects,getRequests,createRequest,acceptRequest,rejectRequest}
+    const showDonations = async () => {
+        const contract = getCharityContract();
+        const showDonations = await contract.showDonations(0)
+        return showDonations
+    }
+
+    const donorVoteRequest = async (reqId) => {
+        const contract = getCharityContract();
+        const r = await contract.donorVoteRequest(reqId)
+        return r;
+    }
+
+    const makePayment = async (reqId) => {
+        const contract = getCharityContract();
+        const r = await contract.makePayment(reqId)
+        console.log(r)
+        return r;
+    }
+
+    const getBalance = async () => {
+        const contract = getCharityContract();
+        const l = await contract.getBalance();
+        console.log(l.toNumber())
+    }
+
+    return {connect,account:currentAccount,user:currentUser,createUser,getValSecret,createB,donate,getVoteRequests,makePayment,getBalance,
+        getUser,createProject,getProjects,getRequests,createRequest,acceptRequest,rejectRequest,showDonations,donorVoteRequest}
 }
 
 export default useCharity

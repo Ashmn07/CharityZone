@@ -6,11 +6,12 @@ import useCharity from '../contract/useCharity'
 function ViewProjects() {
 
   const {getProjects} = useCharity()
-  const [projects,setProjects] = useState([])
+  const [projects,setProjects] = useState()
 
   const getP = async () => {
     const proj = await getProjects()
     setProjects(proj)
+    console.log(proj)
   }
 
   useEffect(()=>{
@@ -30,13 +31,14 @@ function ViewProjects() {
        <div className="w-full px-16 py-32">
           <h1 className="text-white mb-8 font-bold text-4xl">Charity Projects</h1>
           <div className="grid grid-cols-3 gap-6">
-           {projects.length==0?
+           {projects?.length==0?
            <span className="text-white font-bold text-4xl">No Projects Yet</span>
            :
-            projects.map((proj)=>(
-                <div className="p-6 rounded-lg border shadow-md bg-gray-800 border-gray-700 hover:bg-gray-700">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-white">{proj.title}</h5>
-                <p class="font-normal text-gray-400">{proj.description}</p>
+            projects?.map((proj,id)=>(
+                <div className="p-6 rounded-lg border shadow-md bg-gray-800 border-gray-700 hover:bg-gray-700" key={id}>
+                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">{proj.title}</h5>
+                  <p className="mb-2 font-normal text-gray-400">{proj.description}</p>
+                  <p className="font-normal text-gray-300">Donor Count : {proj.donorCount.toNumber()}</p>
                 </div>
             ))
            }

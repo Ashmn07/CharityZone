@@ -20,7 +20,7 @@ function Donor() {
     id:1,
     title:'Vote Request',
     icon:GiVote,
-    route:'/'
+    route:'/donor/voteRequest'
   },{
     id:2,
     title:'Check Vote Result',

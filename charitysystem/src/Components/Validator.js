@@ -3,6 +3,7 @@ import {useLocation,Link} from 'react-router-dom';
 import useCharity from '../contract/useCharity'
 import Logo from '../assets/logo2.png'
 import { GrOverview,GrValidate } from "react-icons/gr";
+import {IoCloseCircleSharp} from "react-icons/io5"
 
 
 function Validator() {
@@ -15,6 +16,11 @@ function Validator() {
     route:'/validator/viewRequests'
   },{
     id:1,
+    title:'Close Voting',
+    icon:IoCloseCircleSharp,
+    route:'/validator/closeVoting'
+  },{
+    id:2,
     title:'Validation Criteria',
     icon:GrValidate,
     route:'/validator/validationCriteria'
