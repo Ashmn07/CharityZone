@@ -24,7 +24,7 @@ function Beneficiary() {
     id:2,
     title:'Request Status',
     icon:BsFillQuestionSquareFill,
-    route:'/'
+    route:'/beneficiary/requestStatus'
   }]
 
   return (

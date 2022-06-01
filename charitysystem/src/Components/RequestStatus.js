@@ -4,20 +4,20 @@ import Logo from '../assets/logo2.png'
 import useCharity from '../contract/useCharity'
 import { FaPeopleArrows } from "react-icons/fa";
 
-function CloseVoting() {
+function RequestStatus() {
 
-  const {getVoteRequests,makePayment} = useCharity()
+  const {getVoteRequests,getDelRequests,makePayment} = useCharity()
   const [requests,setRequests] = useState([])
+  const [delRequests,setDelRequests] = useState([])
 
   const getR = async () => {
     const r = await getVoteRequests()
-    console.log(r)
     setRequests(r)
-  }
 
-  const clickHandler = async (e,rId) => {
-    e.preventDefault()
-    const r = await makePayment(rId)
+    const d = await getDelRequests()
+    setDelRequests(d)
+
+    console.log(r,d)
   }
 
   useEffect(()=>{
@@ -37,11 +37,31 @@ function CloseVoting() {
       <div className="w-full px-16 py-32">
             <h1 className="text-white mb-8 font-bold text-4xl">Charity Vote Requests</h1>
             <div className="grid grid-cols-3 gap-6">
+            {
+                delRequests?.map((req,id)=>(
+                    <div key={id} className="flex flex-col divide-y divide-gray-600 rounded-xl shadow-md bg-gray-800 border-gray-700">
+                        <div className="flex items-center justify-left space-x-4 py-4 px-6">
+                            <FaPeopleArrows className="text-white text-xl"/>
+                            <h5 className="text-xl font-bold text-white">{req.reason}</h5>
+                        </div>
+                        <div className="py-4 flex flex-col justify-center items-between px-6">
+                            <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Beneficiary Link : </span><a className="text-blue-400" href={req.reqLink}>{req.reqLink}</a></p>
+                        </div>
+                        <div className="py-4 flex items-center justify-between px-6">
+                            <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Amount : </span>{req.amount.toNumber()} ether</p>
+                            <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Project : </span>{req.projTitle}</p>
+                        </div>
+                        <div className="flex items-center w-full">
+                            <p className="font-semibold text-center text-lg flex-1 py-2 px-4 bg-red-500 hover:bg-red-700 rounded-b-xl">Rejected</p>
+                        </div>
+                    </div>  
+                ))
+            }
            {requests?.length==0?
            <span className="text-white font-bold text-4xl">No requests Yet</span>
            :
             requests.map((req,id)=>(
-                req.verified===false?
+                req.verified===true?
                 <div key={id} className="flex flex-col divide-y divide-gray-600 rounded-xl shadow-md bg-gray-800 border-gray-700">
                   <div className="flex items-center justify-left space-x-4 py-4 px-6">
                     <FaPeopleArrows className="text-white text-xl"/>
@@ -55,7 +75,7 @@ function CloseVoting() {
                     <p className="font-normal text-gray-400"><span className="font-semibold text-gray-200">Project : </span>{req.projTitle}</p>
                   </div>
                   <div className="flex items-center w-full">
-                    <button onClick={(e)=> clickHandler(e,id)} className="font-semibold text-lg flex-1 py-2 px-4 bg-green-500 cursor-pointer hover:bg-green-700 rounded-b-xl">Close Voting</button>
+                    <p className={`font-semibold text-center text-lg flex-1 py-2 px-4 ${req.approved===true?"bg-green-500 hover:bg-green-700":"bg-red-500 hover:bg-red-700"} rounded-b-xl`}>{req.approved===true?"Approved":"Rejected"}</p>
                   </div>
                 </div>:null
             ))
@@ -66,4 +86,4 @@ function CloseVoting() {
   )
 }
 
-export default CloseVoting
+export default RequestStatus

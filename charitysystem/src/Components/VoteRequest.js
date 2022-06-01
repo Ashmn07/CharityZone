@@ -41,6 +41,7 @@ function VoteRequest() {
            <span className="text-white font-bold text-4xl">No requests Yet</span>
            :
             requests.map((req,id)=>(
+                req.verified===false?
                 <div key={id} className="flex flex-col divide-y divide-gray-600 rounded-xl shadow-md bg-gray-800 border-gray-700">
                   <div className="flex items-center justify-left space-x-4 py-4 px-6">
                     <FaPeopleArrows className="text-white text-xl"/>
@@ -56,7 +57,7 @@ function VoteRequest() {
                   <div className="flex items-center w-full">
                     <button onClick={(e)=> clickHandler(e,id)} className="font-semibold text-lg flex-1 py-2 px-4 bg-green-500 cursor-pointer hover:bg-green-700 rounded-b-xl">Vote</button>
                   </div>
-                </div>
+                </div>:null
             ))
            }
            </div>

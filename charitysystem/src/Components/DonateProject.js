@@ -81,8 +81,6 @@ function DonateProjects() {
                 </div>
             ))
            }
-           {/* <button onClick={(e)=>handleClick(e)} className="text-white" >Console check 1</button> */}
-           <button onClick={(e)=>getDets(e)} className="text-white" >Console check 2</button>
            </div>
         </div> 
         </>   

@@ -213,8 +213,4 @@ contract Charity{
         voteRequestDetails[_reqNo].approved=true;
         thisRequest.recepient.transfer(thisRequest.amount*e);
     }
-
-    function getBalance() public view returns(uint){
-        return address(this).balance;
-    }
 }

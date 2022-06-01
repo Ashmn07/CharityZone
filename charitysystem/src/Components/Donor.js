@@ -25,7 +25,7 @@ function Donor() {
     id:2,
     title:'Check Vote Result',
     icon:MdOutlinePendingActions,
-    route:'/'
+    route:'/donor/voteStatus'
   }]
 
   return (

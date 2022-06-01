@@ -3,7 +3,7 @@ import {ethers,BigNumber} from 'ethers'
 import { useEffect, useState } from 'react'
 
 const ContractABI = Charity.abi
-const ContractAddress = '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318'
+const ContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
 const Ethereum = typeof window !== 'undefined' && window.ethereum
 
 const getCharityContract = () => {
@@ -63,6 +63,12 @@ const useCharity = () => {
     const getRequests = async() => {
         const contract = getCharityContract();
         const req = await contract.getRequests()
+        return req
+    }
+
+    const getDelRequests = async() => {
+        const contract = getCharityContract();
+        const req = await contract.getDelRequests()
         return req
     }
 
@@ -141,14 +147,8 @@ const useCharity = () => {
         return r;
     }
 
-    const getBalance = async () => {
-        const contract = getCharityContract();
-        const l = await contract.getBalance();
-        console.log(l.toNumber())
-    }
-
-    return {connect,account:currentAccount,user:currentUser,createUser,getValSecret,createB,donate,getVoteRequests,makePayment,getBalance,
-        getUser,createProject,getProjects,getRequests,createRequest,acceptRequest,rejectRequest,showDonations,donorVoteRequest}
+    return {connect,account:currentAccount,user:currentUser,createUser,getValSecret,createB,donate,getVoteRequests,makePayment,
+        getDelRequests,getUser,createProject,getProjects,getRequests,createRequest,acceptRequest,rejectRequest,showDonations,donorVoteRequest}
 }
 
 export default useCharity
