@@ -26,8 +26,9 @@ function CreateRequest() {
   const getProj = async() => {
     const p = await getProjects()
     setProjects(p) 
-    const r = await getRequests()
-    console.log(r)
+    console.log(p)
+    // const r = await getRequests()
+    // console.log(r)
   }
 
   useEffect(()=>{

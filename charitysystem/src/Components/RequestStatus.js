@@ -6,7 +6,7 @@ import { FaPeopleArrows } from "react-icons/fa";
 
 function RequestStatus() {
 
-  const {getVoteRequests,getDelRequests,makePayment} = useCharity()
+  const {getVoteRequests,getDelRequests} = useCharity()
   const [requests,setRequests] = useState([])
   const [delRequests,setDelRequests] = useState([])
 

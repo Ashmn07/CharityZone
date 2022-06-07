@@ -207,10 +207,12 @@ contract Charity{
         == keccak256(abi.encodePacked(("validator"))));
         voteRequest storage thisRequest=voteRequests[_reqNo];
         voteRequestDetails[_reqNo].verified=true;
-        require(thisRequest.amount<=projs[thisRequest.projId].amt,"No balance");
-        require(thisRequest.noOfVoters > (projs[thisRequest.projId].donors.length)/2,"No Majority");
-        uint256 e = uint256(10)**uint256(18);
-        voteRequestDetails[_reqNo].approved=true;
-        thisRequest.recepient.transfer(thisRequest.amount*e);
+        if(thisRequest.noOfVoters > (projs[thisRequest.projId].donors.length)/2){
+            if(thisRequest.amount<=projs[thisRequest.projId].amt){
+                uint256 e = uint256(10)**uint256(18);
+                voteRequestDetails[_reqNo].approved=true;
+                thisRequest.recepient.transfer(thisRequest.amount*e);
+            }   
+        }
     }
 }
